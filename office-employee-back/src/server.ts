@@ -1,11 +1,23 @@
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 
 import { router } from "./routes";
 
 const app = express();
 
 app.use(cors());
+
+mongoose
+  .connect("mongodb://db:27017/office-employee", {
+    useNewUrlParser: true,
+  })
+  .then((result) => {
+    console.log("MongoDB Conectado");
+  })
+  .catch((error) => {
+    console.log(error);
+  });
 
 app.use(router);
 
@@ -24,4 +36,6 @@ app.use(
   }
 );
 
-app.listen(3000, () => console.log("Server is running on port 3001"));
+app.listen(process.env.PORT, () =>
+  console.log(`Server is running on port ${process.env.PORT}`)
+);

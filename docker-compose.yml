@@ -8,6 +8,20 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./office-employee-back:/usr/src/app/office-employee-back
-      - /usr/src/app/office-employee-back/node_modules
+    depends_on:
+      - db
     ports:
-      - 3001:3000
+      - 8080:8080
+    environment:
+      PORT: 8080
+  db:
+    image: mongo
+    container_name: office-employee-db
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb:/data/db
+    command: "--logpath=/dev/null"
+
+volumes:
+  mongodb:
