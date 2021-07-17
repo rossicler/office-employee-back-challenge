@@ -13,6 +13,7 @@ services:
     ports:
       - 8080:8080
     environment:
+      AUTH_KEY: 71edaca883dec81992441c2117a1f60b # Change key for production
       PORT: 8080
   db:
     image: mongo

@@ -1,5 +1,4 @@
 import { hash } from "bcryptjs";
-import { response } from "express";
 
 import { Employee } from "../models/employee";
 import { ValidationUtils } from "../utils/validation";
@@ -29,7 +28,6 @@ interface IEmployeeRequest {
 
 export class CreateEmployeeService {
   async execute(employeeData: IEmployeeRequest) {
-    // Validate fields
     const requiredFields = [
       "firstName",
       "lastName",
