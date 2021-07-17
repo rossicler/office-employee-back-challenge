@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express";
 
+import { CreateEmployeeController } from "./controllers/CreateEmployeeController";
+
 export const router = Router();
 
-router.get("/", (request: Request, response: Response) => {
-  return response.json({ success: true });
-});
+const createEmployeeController = new CreateEmployeeController();
+
+router.post("/employees", createEmployeeController.handle);

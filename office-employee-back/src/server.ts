@@ -1,4 +1,5 @@
 import express, { Request, Response, NextFunction } from "express";
+import "express-async-errors";
 import cors from "cors";
 import mongoose from "mongoose";
 
@@ -7,6 +8,8 @@ import { router } from "./routes";
 const app = express();
 
 app.use(cors());
+
+app.use(express.json());
 
 mongoose
   .connect("mongodb://db:27017/office-employee", {
