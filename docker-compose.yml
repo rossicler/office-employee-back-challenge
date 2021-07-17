@@ -1,0 +1,13 @@
+version: "3.3"
+
+services:
+  office-employee-back:
+    container_name: office-employee-back
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes:
+      - ./office-employee-back:/usr/src/app/office-employee-back
+      - /usr/src/app/office-employee-back/node_modules
+    ports:
+      - 3001:3000
