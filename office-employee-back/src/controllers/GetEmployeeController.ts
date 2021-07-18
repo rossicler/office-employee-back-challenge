@@ -8,7 +8,7 @@ export class GetEmployeeController {
 
     const getEmployeeService = new GetEmployeeService();
 
-    const employee = await getEmployeeService.execute({ userId });
+    let employee = await getEmployeeService.execute({ userId });
 
     return response.json(employee);
   }

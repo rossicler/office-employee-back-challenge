@@ -7,7 +7,6 @@ interface IGetEmployeeRequest {
 
 export class GetEmployeeService {
   async execute({ userId }: IGetEmployeeRequest) {
-    const employee = await Employee.findById(userId).exec();
-    return employee;
+    return await Employee.findById(userId).select("-password").exec();
   }
 }
