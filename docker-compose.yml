@@ -19,7 +19,7 @@ services:
     image: mongo
     container_name: office-employee-db
     ports:
-      - 27017:27017
+      - 5432:27017
     volumes:
       - mongodb:/data/db
     command: "--logpath=/dev/null"
