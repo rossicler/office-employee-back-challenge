@@ -2,8 +2,10 @@ import express, { Request, Response, NextFunction } from "express";
 import "express-async-errors";
 import cors from "cors";
 import mongoose from "mongoose";
+import { graphqlHTTP } from "express-graphql";
 
 import { router } from "./routes";
+import schema from "./schema/schema";
 
 const app = express();
 
@@ -23,6 +25,14 @@ mongoose
   });
 
 app.use(router);
+
+app.use(
+  "/graphql",
+  graphqlHTTP({
+    schema,
+    graphiql: true,
+  })
+);
 
 app.use(
   (err: Error, request: Request, response: Response, next: NextFunction) => {
