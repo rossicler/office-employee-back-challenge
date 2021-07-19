@@ -11,6 +11,7 @@ import {
 } from "graphql";
 
 import { Employee } from "../models/employee";
+import { getUserIdFromToken } from "../utils/token";
 
 const BankInfoType = new GraphQLObjectType({
   name: "BankInfo",
@@ -58,9 +59,10 @@ const RootQuery = new GraphQLObjectType({
   fields: {
     employee: {
       type: EmployeeType,
-      args: { id: { type: GraphQLID } },
+      args: { token: { type: GraphQLString } },
       resolve(parent, args) {
-        return Employee.findById(args.id);
+        const id = getUserIdFromToken(args.token);
+        return Employee.findById(id);
       },
     },
     employees: {
