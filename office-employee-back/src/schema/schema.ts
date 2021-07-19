@@ -1,4 +1,5 @@
-import { hash } from "bcryptjs";
+import { hash, compare } from "bcryptjs";
+import { sign } from "jsonwebtoken";
 import {
   GraphQLObjectType,
   GraphQLID,
@@ -41,6 +42,14 @@ const EmployeeType = new GraphQLObjectType({
     department: { type: GraphQLString },
     workingHours: { type: GraphQLInt },
     bankInfo: { type: BankInfoType },
+  }),
+});
+
+const AuthType = new GraphQLObjectType({
+  name: "Auth",
+  fields: () => ({
+    token: { type: GraphQLString },
+    employee: { type: EmployeeType },
   }),
 });
 
@@ -92,6 +101,7 @@ const Mutation = new GraphQLObjectType({
       },
       async resolve(parent, args) {
         let password = await hash(args.password, 8);
+        // Verify existing users with same name or email
 
         let employee = new Employee({
           firstName: args.firstName,
@@ -118,6 +128,39 @@ const Mutation = new GraphQLObjectType({
           },
         });
         return employee.save();
+      },
+    },
+    login: {
+      type: AuthType,
+      args: {
+        username: { type: new GraphQLNonNull(GraphQLString) },
+        password: { type: new GraphQLNonNull(GraphQLString) },
+      },
+      async resolve(parent, args) {
+        const user = await Employee.findOne({
+          username: args.username,
+        }).exec();
+        if (!user) {
+          throw new Error("Username or password invalid");
+        }
+
+        const passwordMatch = await compare(args.password, user.password);
+        if (!passwordMatch) {
+          throw new Error("Username or password invalid");
+        }
+
+        const token = sign(
+          {
+            username: user.username,
+          },
+          process.env.AUTH_KEY,
+          {
+            subject: user._id.toString(),
+            expiresIn: "1d",
+          }
+        );
+
+        return { token, employee: user };
       },
     },
   },
