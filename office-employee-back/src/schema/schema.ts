@@ -100,8 +100,19 @@ const Mutation = new GraphQLObjectType({
         cvc: { type: new GraphQLNonNull(GraphQLString) },
       },
       async resolve(parent, args) {
+        const usernameAlreadyExists = await Employee.find({
+          username: args.username,
+        }).exec();
+        if (usernameAlreadyExists.length > 0)
+          throw new Error("Username already exists");
+
+        const emailAlreadyExists = await Employee.find({
+          email: args.email,
+        }).exec();
+        if (emailAlreadyExists.length > 0)
+          throw new Error("Email already exists");
+
         let password = await hash(args.password, 8);
-        // Verify existing users with same name or email
 
         let employee = new Employee({
           firstName: args.firstName,
